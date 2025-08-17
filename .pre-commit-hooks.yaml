@@ -1,0 +1,7 @@
+- id: pandoc
+  name: Format markdown files with pandoc
+  description: Format markdown files using pandoc with standardized settings
+  entry: pandoc-format
+  language: script
+  types: [markdown]
+  minimum_pre_commit_version: 2.17.0

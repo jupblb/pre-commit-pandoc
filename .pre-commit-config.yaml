@@ -1,0 +1,8 @@
+# Example configuration for testing
+repos:
+  - repo: .
+    rev: HEAD
+    hooks:
+      - id: pandoc
+        # Optional: customize formatting options
+        # args: [--columns=100, --no-reference-links, --from=markdown, --to=markdown]

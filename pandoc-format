@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+#
+# Wrapper script for pandoc to format markdown files
+# Used as a pre-commit hook
+
+set -euo pipefail
+
+# Check if pandoc is installed
+if ! command -v pandoc &> /dev/null; then
+    echo "Error: pandoc is not installed. Please install pandoc before using this hook."
+    echo "Visit https://pandoc.org/installing.html for installation instructions."
+    exit 1
+fi
+
+# Default values
+COLUMNS=80
+USE_REFERENCE_LINKS=true
+FROM_FORMAT="gfm"
+TO_FORMAT="gfm"
+
+# Parse arguments
+FILES=()
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --columns)
+            if [[ $# -lt 2 ]]; then
+                echo "Error: --columns requires an argument"
+                exit 1
+            fi
+            COLUMNS="$2"
+            shift 2
+            ;;
+        --no-reference-links)
+            USE_REFERENCE_LINKS=false
+            shift
+            ;;
+        --from)
+            if [[ $# -lt 2 ]]; then
+                echo "Error: --from requires an argument"
+                exit 1
+            fi
+            FROM_FORMAT="$2"
+            shift 2
+            ;;
+        --to)
+            if [[ $# -lt 2 ]]; then
+                echo "Error: --to requires an argument"
+                exit 1
+            fi
+            TO_FORMAT="$2"
+            shift 2
+            ;;
+        *)
+            FILES+=("$1")
+            shift
+            ;;
+    esac
+done
+
+# Check if any files were provided
+if [ ${#FILES[@]} -eq 0 ]; then
+    echo "Error: No files provided"
+    exit 1
+fi
+
+# Build pandoc arguments
+PANDOC_ARGS=(
+    "--columns=$COLUMNS"
+    "-s"
+    "-f" "$FROM_FORMAT"
+    "-t" "$TO_FORMAT"
+)
+
+if [ "$USE_REFERENCE_LINKS" = true ]; then
+    PANDOC_ARGS+=("--reference-links")
+fi
+
+# Process each file
+exit_code=0
+
+for file in "${FILES[@]}"; do
+    # Create a temporary file for output
+    tmpfile=$(mktemp)
+    
+    # Run pandoc with the specified flags
+    if pandoc "${PANDOC_ARGS[@]}" --output "$tmpfile" "$file" 2>/dev/null; then
+        
+        # Check if the file changed
+        if ! cmp -s "$file" "$tmpfile"; then
+            # Replace the original file with the formatted version
+            mv "$tmpfile" "$file"
+            echo "Formatted: $file"
+            exit_code=1
+        else
+            rm "$tmpfile"
+        fi
+    else
+        echo "Error: Failed to format $file"
+        rm -f "$tmpfile"
+        exit_code=1
+    fi
+done
+
+exit $exit_code
