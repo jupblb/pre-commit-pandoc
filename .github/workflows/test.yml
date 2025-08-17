@@ -1,0 +1,51 @@
+name: Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v5
+
+    - name: Install pandoc
+      uses: pandoc/actions/setup@v1
+
+    - name: Show pandoc version
+      run: pandoc --version
+
+    - name: Run tests
+      run: ./tests/test_pandoc_format.sh
+
+    - name: Test with pre-commit
+      run: |
+        pip install pre-commit
+        pre-commit run --all-files || true
+        # Run again to ensure idempotency
+        pre-commit run --all-files
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v5
+
+    - name: Shellcheck
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y shellcheck
+        shellcheck pandoc-format
+        shellcheck tests/test_pandoc_format.sh
+
+    - name: Check file permissions
+      run: |
+        test -x pandoc-format || (echo "pandoc-format is not executable" && exit 1)
+        test -x tests/test_pandoc_format.sh || (echo "test script is not executable" && exit 1)

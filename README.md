@@ -1,5 +1,7 @@
 # pre-commit-pandoc
 
+[![Test](https://github.com/jupblb/pre-commit-pandoc/actions/workflows/test.yml/badge.svg)](https://github.com/jupblb/pre-commit-pandoc/actions/workflows/test.yml)
+
 A [pre-commit] hook for formatting Markdown files using [pandoc].
 
 ## Features
