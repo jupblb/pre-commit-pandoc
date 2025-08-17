@@ -1,6 +1,6 @@
 # pre-commit-pandoc
 
-[![Test](https://github.com/jupblb/pre-commit-pandoc/actions/workflows/test.yml/badge.svg)](https://github.com/jupblb/pre-commit-pandoc/actions/workflows/test.yml)
+[![Test]][1]
 
 A [pre-commit] hook for formatting Markdown files using [pandoc].
 
@@ -16,7 +16,7 @@ This hook formats Markdown files with pandoc using the following settings:
 ## Prerequisites
 
 - [pre-commit] installed
-- [pandoc][1] installed
+- [pandoc][2] installed
 
 ## Installation
 
@@ -82,8 +82,8 @@ repos:
 - `--to <format>` - Set output format (default: gfm)
 
 Common format values include: `gfm` (GitHub Flavored Markdown), `markdown`,
-`markdown_strict`, `commonmark`. See [pandoc documentation][2] for all
-supported formats.
+`markdown_strict`, `commonmark`. See [pandoc documentation] for all supported
+formats.
 
 ## How it Works
 
@@ -102,7 +102,9 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 MIT License - see LICENSE file for details.
 
+  [Test]: https://github.com/jupblb/pre-commit-pandoc/actions/workflows/test.yml/badge.svg
+  [1]: https://github.com/jupblb/pre-commit-pandoc/actions/workflows/test.yml
   [pre-commit]: https://pre-commit.com
   [pandoc]: https://pandoc.org/
-  [1]: https://pandoc.org/installing.html
-  [2]: https://pandoc.org/MANUAL.html#general-options
+  [2]: https://pandoc.org/installing.html
+  [pandoc documentation]: https://pandoc.org/MANUAL.html#general-options

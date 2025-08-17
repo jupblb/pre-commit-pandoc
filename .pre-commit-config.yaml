@@ -4,5 +4,6 @@ repos:
     rev: HEAD
     hooks:
       - id: pandoc
+        exclude: ^tests/fixtures/
         # Optional: customize formatting options
         # args: [--columns=100, --no-reference-links, --from=markdown, --to=markdown]

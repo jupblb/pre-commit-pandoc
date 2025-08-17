@@ -27,9 +27,18 @@ jobs:
     - name: Test with pre-commit
       run: |
         pip install pre-commit
-        pre-commit run --all-files || true
+        # Create a test configuration that excludes test fixtures
+        cat > .pre-commit-test-config.yaml << 'EOF'
+        repos:
+          - repo: .
+            rev: HEAD
+            hooks:
+              - id: pandoc
+                exclude: ^tests/fixtures/
+        EOF
+        pre-commit run --config .pre-commit-test-config.yaml --all-files || true
         # Run again to ensure idempotency
-        pre-commit run --all-files
+        pre-commit run --config .pre-commit-test-config.yaml --all-files
 
   lint:
     runs-on: ubuntu-latest

@@ -22,7 +22,7 @@ PANDOC_FORMAT="$PROJECT_ROOT/pandoc-format"
 
 # Temporary directory for test files
 TEST_TEMP_DIR=$(mktemp -d)
-trap "rm -rf $TEST_TEMP_DIR" EXIT
+trap 'rm -rf "$TEST_TEMP_DIR"' EXIT
 
 # Helper functions
 print_test_header() {
@@ -50,24 +50,6 @@ assert_exit_code() {
         return 0
     else
         print_failure "$test_name: expected exit code $expected, got $actual"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    fi
-}
-
-assert_file_changed() {
-    local file1=$1
-    local file2=$2
-    local test_name=$3
-    
-    TESTS_RUN=$((TESTS_RUN + 1))
-    
-    if ! cmp -s "$file1" "$file2"; then
-        print_success "$test_name: file was changed as expected"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    else
-        print_failure "$test_name: file was not changed"
         TESTS_FAILED=$((TESTS_FAILED + 1))
         return 1
     fi
@@ -141,7 +123,6 @@ test_basic_formatting() {
     print_test_header "Basic formatting with defaults"
     
     cp "$SCRIPT_DIR/fixtures/simple.md" "$TEST_TEMP_DIR/test1.md"
-    local original="$TEST_TEMP_DIR/test1.md"
     
     # Run pandoc-format
     set +e
@@ -156,7 +137,8 @@ test_basic_formatting() {
     assert_contains "$TEST_TEMP_DIR/test1.md" "\[inline link\]:" "Reference links"
     
     # Check line wrapping (approximate check for 80 columns)
-    local long_lines=$(awk 'length > 85' "$TEST_TEMP_DIR/test1.md" | wc -l)
+    local long_lines
+    long_lines=$(awk 'length > 85' "$TEST_TEMP_DIR/test1.md" | wc -l)
     TESTS_RUN=$((TESTS_RUN + 1))
     if [ "$long_lines" -eq 0 ]; then
         print_success "Lines wrapped at ~80 columns"
@@ -182,7 +164,8 @@ test_custom_columns() {
     assert_exit_code 1 $exit_code "Custom columns formatting"
     
     # Check line wrapping (approximate check for 60 columns)
-    local long_lines=$(awk 'length > 65' "$TEST_TEMP_DIR/test2.md" | wc -l)
+    local long_lines
+    long_lines=$(awk 'length > 65' "$TEST_TEMP_DIR/test2.md" | wc -l)
     TESTS_RUN=$((TESTS_RUN + 1))
     if [ "$long_lines" -eq 0 ]; then
         print_success "Lines wrapped at ~60 columns"
