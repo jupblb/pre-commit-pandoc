@@ -1,8 +1,8 @@
 # pre-commit-pandoc
 
-[![Test]][1]
+[![Test][]][1] [![pre-commit]][2]
 
-A [pre-commit] hook for formatting Markdown files using [pandoc].
+A [pre-commit][3] hook for formatting Markdown files using [pandoc].
 
 ## Features
 
@@ -15,8 +15,8 @@ This hook formats Markdown files with pandoc using the following settings:
 
 ## Prerequisites
 
-- [pre-commit] installed
-- [pandoc][2] installed
+- [pre-commit][3] installed
+- [pandoc][4] installed
 
 ## Installation
 
@@ -104,7 +104,9 @@ MIT License - see LICENSE file for details.
 
   [Test]: https://github.com/jupblb/pre-commit-pandoc/actions/workflows/test.yml/badge.svg
   [1]: https://github.com/jupblb/pre-commit-pandoc/actions/workflows/test.yml
-  [pre-commit]: https://pre-commit.com
+  [pre-commit]: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit
+  [2]: https://github.com/pre-commit/pre-commit
+  [3]: https://pre-commit.com
   [pandoc]: https://pandoc.org/
-  [2]: https://pandoc.org/installing.html
+  [4]: https://pandoc.org/installing.html
   [pandoc documentation]: https://pandoc.org/MANUAL.html#general-options
